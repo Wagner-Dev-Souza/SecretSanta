@@ -1,0 +1,20 @@
+version: '3.0'
+
+services:
+  api:
+    image: amigo-secreto-api
+    build:
+      context: .
+    env_file:
+      - .env 
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:5.0
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
