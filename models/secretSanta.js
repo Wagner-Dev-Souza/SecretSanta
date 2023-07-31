@@ -10,7 +10,6 @@ const secretSantaUsersSchema = new Schema({
     versionKey: false
 });
 
-
 const secretSantaSchema = new Schema({
     "_id": String,
     "name": String,
