@@ -89,6 +89,34 @@ npm start                # http://localhost:3000
 
 O arquivo `.env` **não** é versionado — use o `.sample.env` como modelo e nunca comite credenciais.
 
+## 📧 Mensageria: como configurar o envio de e-mail
+
+O sorteio avisa cada participante por e-mail, e o envio é feito por uma conta **Gmail** usando uma **senha de app**. As duas variáveis precisam estar preenchidas no `.env`, com **exatamente estes nomes**:
+
+```env
+MAILER_EMAIL=seu.email@gmail.com
+MAILER_PASS=abcdefghijklmnop
+```
+
+> ⚠️ `MAILER_EMAIL` não é a senha da conta. É uma **senha de app**, gerada à parte, com 16 caracteres. A senha normal do Gmail **não funciona** aqui e não deve ser usada.
+
+### Passo a passo para gerar a senha de app
+
+1. **Crie uma conta Gmail para o projeto.** Não use sua conta pessoal — essa credencial fica no arquivo de ambiente de quem roda o projeto.
+2. **Ative a verificação em duas etapas** em [`myaccount.google.com/security`](https://myaccount.google.com/security). Esse passo é obrigatório: **o Google só libera senha de app para contas com verificação em duas etapas ativa**.
+3. Acesse [`myaccount.google.com/apppasswords`](https://myaccount.google.com/apppasswords).
+4. Dê um nome para a senha (ex.: `amigo-secreto`) e clique em **Criar**.
+5. O Google mostra **16 caracteres** — copie na hora, porque **ele não mostra de novo**.
+6. Cole em `MAILER_PASS` no seu `.env`, **sem espaços**.
+7. Reinicie a aplicação. Se as variáveis estiverem ausentes ou erradas, a aplicação **avisa no console na subida** — o sorteio não vai enviar nada em silêncio.
+
+### Se os e-mails não estiverem saindo
+
+- Confira se os **dois** nomes estão exatamente iguais aos do exemplo acima
+- Confirme que a **verificação em duas etapas** está ativa na conta
+- Verifique se o Google não **revogou** a senha de app (acontece ao trocar a senha da conta)
+- Lembre que contas novas do Gmail podem ter limite diário de envio reduzido
+
 ## 📂 Estrutura
 
 ```

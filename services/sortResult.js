@@ -3,6 +3,16 @@ const nodemailer = require("nodemailer");
 const EMAIL = process.env.MAILER_EMAIL;
 const PASS = process.env.MAILER_PASS;
 
+// Configuração obrigatória: sem estas duas variáveis o Gmail recusa a autenticação
+// e nenhum e-mail do sorteio sai. Avisa alto na subida, em vez de falhar calado.
+if (!EMAIL || !PASS) {
+    console.warn(
+        "[aviso] MAILER_EMAIL e/ou MAILER_PASS não estão definidos no .env — " +
+        "o envio de e-mail do sorteio NÃO vai funcionar. " +
+        "Veja a seção 'Mensageria' do README para gerar a senha de app do Gmail."
+    );
+}
+
 const transporter = nodemailer.createTransport({
     service: "gmail",
     secure: false,
@@ -15,7 +25,7 @@ const transporter = nodemailer.createTransport({
 const sendMail = async (secretSanta, user, amigoSecreto) => {
     try {
         await transporter.sendMail({
-            from: process.env.MAILER_EMAIL,
+            from: EMAIL,
             to: user.email,
             subject: `Sorteio ${secretSanta.name}`,
             text: `Olá ${user.name}, você sorteou ${amigoSecreto} como seu amigo secreto!`
