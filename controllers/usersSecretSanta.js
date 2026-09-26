@@ -1,6 +1,7 @@
 const services = require("../services/usersSecretSanta");
 const serviceSecretSanta = require("../services/secretSanta")
 const serviceResult = require("../services/sortResult");
+const { SECRET_SANTA_NOT_FOUND } = require("../constants/errors");
 
 const getUsers = async (req, res, next) => {
   const id = req.params.id;
@@ -75,11 +76,17 @@ const updateUsers = async (req, res, next) => {
 const sortUsers = async (req, res, next) => {
   try {
     const secretSanta = await serviceSecretSanta.getSecretSantaById(req.params.id);
-    const result = await serviceResult.sorteio(secretSanta);
-    
+
+    if (!secretSanta) {
+      throw SECRET_SANTA_NOT_FOUND;
+    }
+
+    const { result, mail } = await serviceResult.sorteio(secretSanta);
+
     return res.json({
       message: "Successfully Raffled Users",
       data: result,
+      mail,
     });
   } catch (error) {
     return next(error);

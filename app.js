@@ -9,4 +9,10 @@ app.use(express.json());
 app.use(routes);
 app.use(handleErrors);
 
-app.listen(3000, () => console.log("App Running on port 3000"));
+// Sobe o servidor apenas quando executado direto (npm start / node app.js).
+// Os testes importam o app e exercitam a porta efemera do supertest.
+if (require.main === module) {
+  app.listen(3000, () => console.log("App Running on port 3000"));
+}
+
+module.exports = app;

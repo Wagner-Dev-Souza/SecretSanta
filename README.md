@@ -86,6 +86,7 @@ npm start                # http://localhost:3000
 | `DB_NAME` | nome do banco |
 | `MAILER_EMAIL` | conta Gmail usada no envio |
 | `MAILER_PASS` | senha de aplicativo dessa conta Gmail |
+| `MAILER_TRANSPORT` | transporte de e-mail: `gmail` (padrão) ou `json` (não envia, usado nos testes) |
 
 O arquivo `.env` **não** é versionado — use o `.sample.env` como modelo e nunca comite credenciais.
 
@@ -134,11 +135,22 @@ Dockerfile / docker-compose.yml
 
 ## 🧪 Testes
 
-Não há testes automatizados — é a principal lacuna do projeto.
+Suíte de integração com **Jest + Supertest**, rodando contra um MongoDB em memória
+(`mongodb-memory-server`) — não precisa de banco instalado nem do Docker:
+
+```bash
+npm test
+```
+
+O que está coberto: criação, renome, busca e remoção de eventos; CRUD de participantes;
+validações de payload e de UUID; sorteio (ninguém tira a si mesmo, cada um dá e recebe
+exatamente um presente, par persistido no banco); e o relatório de envio de e-mail.
+
+Os testes rodam com `MAILER_TRANSPORT=json` — nenhum e-mail real é disparado.
 
 ## 🗺️ Roadmap
 
-- [ ] Testes de integração dos endpoints e do sorteio
+- [x] Testes de integração dos endpoints e do sorteio
 - [ ] Pipeline de integração contínua
 - [ ] Autenticação para proteger as rotas de administração
 
