@@ -16,7 +16,8 @@ const createSecretSanta = async (secretSantaData) => {
 }
 
 const deleteSecretSanta = async (id) => {
-    await secretSanta.findByIdAndDelete(id);
+    const result = await secretSanta.findByIdAndDelete(id);
+    return result;
 }
 
 const updateSecretSanta = async (id, secretSantaData) => {

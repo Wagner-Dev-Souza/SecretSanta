@@ -2,7 +2,7 @@ const services = require("../services/usersSecretSanta");
 const serviceSecretSanta = require("../services/secretSanta")
 const serviceResult = require("../services/sortResult");
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   const id = req.params.id;
   
   try {
@@ -16,7 +16,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getUsersById = async (req, res) => {
+const getUsersById = async (req, res, next) => {
   const { id, userId } = req.params;
 
   try{
@@ -30,7 +30,7 @@ const getUsersById = async (req, res) => {
   }
 };
 
-const createUsers = async (req, res) => {
+const createUsers = async (req, res, next) => {
   const id = req.params.id;
   const body = req.body;
   
@@ -72,7 +72,7 @@ const updateUsers = async (req, res, next) => {
   }
 };
 
-const sortUsers = async (req, res) => {
+const sortUsers = async (req, res, next) => {
   try {
     const secretSanta = await serviceSecretSanta.getSecretSantaById(req.params.id);
     const result = await serviceResult.sorteio(secretSanta);
@@ -82,7 +82,7 @@ const sortUsers = async (req, res) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
 

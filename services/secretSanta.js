@@ -21,7 +21,8 @@ const createSecretSanta = async (secretSantaData) => {
 }
 
 const deleteSecretSanta = async (id) => {
-  await repository.deleteSecretSanta(id);
+  const result = await repository.deleteSecretSanta(id);
+  return result;
 }
 
 const updateSecretSanta = async (id, secretSantaData) => {

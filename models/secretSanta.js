@@ -27,7 +27,7 @@ const amigoOcultoSchema = new Schema({
 const paresAleatoriosSchema = new Schema({
     "name": String,
     "email": String,
-    "occultFriend": amigoOcultoSchema,
+    "amigoOculto": amigoOcultoSchema,
 },{"_id": false});
 
 const ResultSchema = new Schema({

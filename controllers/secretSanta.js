@@ -16,8 +16,9 @@ const getSecretSantaById = async (req, res) => {
   const result = await services.getSecretSantaById(id);
   
   if (!result) {
-    return res.status(200).json({
-      message: "Secret Santa Not Found",
+    return res.status(404).json({
+      status: 404,
+      message: "Amigo oculto não encontrado",
     });
   }
  
@@ -40,8 +41,9 @@ const deleteSecretSanta = async (req, res) => {
   const result = await services.deleteSecretSanta(id);
   
   if (!result) {
-    return res.status(200).json({
-      message: "Secret Santa Not Found",
+    return res.status(404).json({
+      status: 404,
+      message: "Amigo oculto não encontrado",
     });
   }  
   res.status(204).send();
@@ -54,8 +56,9 @@ const updateSecretSanta = async (req, res) => {
   const result = await services.updateSecretSanta(id, body);
   
   if (!result) {
-    return res.status(200).json({
-      message: "Secret Santa Not Found",
+    return res.status(404).json({
+      status: 404,
+      message: "Amigo oculto não encontrado",
     });
   }  
   res.json({

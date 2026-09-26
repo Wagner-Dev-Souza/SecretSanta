@@ -31,6 +31,6 @@ routes.get("/secret-santa/:id/users/:userId", validateSecretSantaId, getUsersByI
 routes.post("/secret-santa/:id/users", validateSecretSantaId, validateSecretSantaUserBody, createUsers);
 routes.delete("/secret-santa/:id/users/:userId", validateSecretSantaId, deleteUsers);
 routes.patch("/secret-santa/:id/users/:userId", validateSecretSantaId, updateUsers);
-routes.get("/secret-santa/:id/sortUsers", sortUsers);
+routes.get("/secret-santa/:id/sortUsers", validateSecretSantaId, sortUsers);
 
 module.exports = routes;

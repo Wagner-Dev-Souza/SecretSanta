@@ -84,7 +84,7 @@ npm start                # http://localhost:3000
 | `DB_HOST` | host do MongoDB |
 | `DB_PORT` | porta do MongoDB |
 | `DB_NAME` | nome do banco |
-| `MAILER_MAIL` | conta Gmail usada no envio |
+| `MAILER_EMAIL` | conta Gmail usada no envio |
 | `MAILER_PASS` | senha de aplicativo dessa conta Gmail |
 
 O arquivo `.env` **não** é versionado — use o `.sample.env` como modelo e nunca comite credenciais.
