@@ -3,6 +3,46 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e
 [versionamento semântico](https://semver.org/lang/pt-BR/).
 
+## [1.2.0] — 2026-09-27
+
+### Adicionado
+
+- **Configuração do envio de e-mail pela própria tela do app**: a conta que envia pode ser definida
+  ali, sem editar arquivo. A senha fica cifrada (AES-256-GCM) fora do repositório e a API devolve
+  apenas o endereço mascarado — o completo nunca volta.
+- **Aviso na primeira execução** numa máquina sem e-mail configurado, com botão de **Ajuda**
+  (passo a passo da senha de app do Gmail) e **Fechar** para quem não tem a chave. Fechando, o aviso
+  não volta.
+- **Sorteio com ou sem envio de e-mail** (`GET /secret-santa/:id/sortUsers?enviarEmail=false`):
+  sorteia e grava os pares sem disparar nada.
+- **Pares ocultos por padrão**, revelando um a um no clique, com *Revelar tudo* / *Ocultar tudo*.
+
+### Alterado
+
+- **Imagem da API só com dependências de produção**: 222 MB → 149 MB. Foi adicionado `.dockerignore`
+  (sem ele o `COPY . .` sobrescrevia o `node_modules` da imagem com o do host) e o `npm install`
+  virou `npm ci --omit=dev`.
+- **nodemailer 6 → 10**. Vulnerabilidades em dependências de produção: 11 → 1.
+- Sem e-mail configurado, o sorteio reporta uma falha por participante em vez de indicar sucesso.
+
+### Corrigido
+
+- O front enviava a senha de app com espaços, embora o Google a exiba em grupos de 4.
+
+## [1.1.0] — 2026-09-27
+
+### Adicionado
+
+- `--atualizar` no lançador: baixa a versão mais recente do projeto e recria os containers. Só apaga
+  a pasta anterior se ela tiver sido criada pelo próprio lançador.
+- Ícone do app (`launcher/icon.ico`, gerado pelo mesmo script dos ícones do PWA).
+- `LICENSE` (ISC), `CHANGELOG.md` e telas do app no README.
+
+### Corrigido
+
+- Modo descartável do Compose: faltava `DB_HOST=mongodb` (a API subia sem conectar no banco) e
+  faltava o serviço do front.
+
 ## [1.0.0] — 2026-09-27
 
 Primeira versão completa: além da API original, o projeto ganhou front instalável, lançador
