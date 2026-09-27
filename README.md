@@ -10,12 +10,19 @@
 |---|---|
 | ![Lista de grupos](docs/screenshots/01-lista-grupos.png) | ![Grupo e participantes](docs/screenshots/02-grupo-participantes.png) |
 
-| Confirmação antes de sortear | Resultado do sorteio |
+| Confirmar o sorteio | Resultado com os pares ocultos |
 |---|---|
-| ![Confirmação do sorteio](docs/screenshots/03-confirmacao-sorteio.png) | ![Resultado do sorteio](docs/screenshots/04-resultado-sorteio.png) |
+| ![Confirmação do sorteio](docs/screenshots/03-confirmacao-sorteio.png) | ![Resultado com pares ocultos](docs/screenshots/04-resultado-oculto.png) |
 
-As imagens são geradas com dados fictícios, em banco descartável e com o envio de e-mail desligado
-(`MAILER_TRANSPORT=json`) — produzir o material não dispara e-mail para ninguém.
+| Pares revelados | Configuração do envio de e-mail |
+|---|---|
+| ![Pares revelados](docs/screenshots/05-resultado-revelado.png) | ![Configuração do e-mail](docs/screenshots/06-configuracao-email.png) |
+
+No sorteio você escolhe entre **enviar os e-mails** ou **só ver os pares**; e os pares sempre saem
+ocultos, revelando um a um (ou todos de uma vez) — dá para mostrar a tela sem vazar o resultado.
+
+As imagens são geradas com dados fictícios, em banco descartável e com o envio desligado
+(`MAILER_TRANSPORT=json`): produzir o material não dispara e-mail para ninguém.
 
 ## 🎯 O problema
 
