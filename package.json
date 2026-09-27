@@ -5,7 +5,13 @@
   "main": "app.js",
   "scripts": {
     "test": "jest --runInBand",
-    "start": "nodemon app"
+    "start": "nodemon app",
+    "db:up": "docker compose up -d mongodb",
+    "db:down": "docker compose down",
+    "db:up:ephemeral": "docker compose -f docker-compose.ephemeral.yml up -d mongodb",
+    "db:down:ephemeral": "docker compose -f docker-compose.ephemeral.yml down",
+    "db:reset": "docker compose exec -T mongodb mongosh secretSanta --quiet --eval \"db.dropDatabase(); print('banco zerado')\"",
+    "db:destroy": "docker compose down -v"
   },
   "keywords": [
     "node"

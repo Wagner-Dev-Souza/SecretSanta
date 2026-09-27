@@ -66,8 +66,11 @@ Os IDs são validados como UUID e o corpo das requisições passa por validaçã
 
 ```bash
 cp .sample.env .env      # preencha as variáveis
-docker compose up
+npm run db:up           # MongoDB em container (volume nomeado)
+npm start                # API em http://localhost:3000
 ```
+
+Ou tudo dentro do Docker: `docker compose up`.
 
 **Localmente:**
 
@@ -76,6 +79,25 @@ npm install
 cp .sample.env .env
 npm start                # http://localhost:3000
 ```
+
+## 🗄️ Banco de dados: com volume e sem volume
+
+| Modo | Como subir | O que acontece com os dados |
+|---|---|---|
+| **Persistente** (padrão) | `npm run db:up` | ficam num volume nomeado do Docker (`mongo-data`); sobrevivem a `npm run db:down`, restart e reboot |
+| **Descartável** | `npm run db:up:ephemeral` | vivem em memória (`tmpfs`); ao derrubar com `npm run db:down:ephemeral`, o banco zera sozinho |
+
+Os dois modos publicam a mesma porta (27017), então rode um por vez. O modo descartável usa
+um projeto Compose próprio (`secretsanta-ephemeral`) e não encosta no volume do modo persistente.
+
+**Zerar o banco sem derrubar nada:**
+
+```bash
+npm run db:reset     # dropDatabase() no container que está no ar
+npm run db:destroy   # apaga o volume do modo persistente (docker compose down -v)
+```
+
+O banco **não** fica dentro da pasta do repositório: o volume é gerenciado pelo Docker.
 
 ## ⚙️ Variáveis de ambiente
 

@@ -1,0 +1,29 @@
+# Modo DESCARTAVEL: o banco vive em memoria (tmpfs), nada e gravado em disco e
+# o volume persistente nao e tocado. Ao parar o container, o banco zera sozinho.
+#
+#   npm run db:up:ephemeral      # sobe limpo
+#   npm run db:down:ephemeral    # derruba e o banco desaparece
+#
+# Usa um projeto Compose separado (secretsanta-ephemeral), entao nao conflita com
+# os containers do modo persistente — mas os dois nao rodam juntos, porque ambos
+# publicam a porta 27017.
+name: secretsanta-ephemeral
+
+services:
+  api:
+    image: amigo-secreto-api
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:5.0
+    tmpfs:
+      - /data/db
+    ports:
+      - 27017:27017
