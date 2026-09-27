@@ -36,6 +36,7 @@ A API centraliza o processo:
 | Organização | camadas (rotas, controllers, services, repositórios, models) | separa entrada HTTP, regra de negócio e acesso a dados |
 | E-mail | Nodemailer com Gmail | avisar cada participante individualmente era requisito do projeto |
 | Ambiente | Docker Compose | sobe a API e o banco juntos, sem instalar MongoDB na máquina |
+| Autenticação | sem autenticação | projeto de portfólio, não distribuído: a API só é alcançável de dentro da máquina (container publicado no host via proxy do nginx). Cadastro e login não agregam no escopo |
 
 ## 🔌 Endpoints
 
@@ -272,8 +273,11 @@ Os testes rodam com `MAILER_TRANSPORT=json` — nenhum e-mail real é disparado.
 ## 🗺️ Roadmap
 
 - [x] Testes de integração dos endpoints e do sorteio
-- [ ] Pipeline de integração contínua
-- [ ] Autenticação para proteger as rotas de administração
+- [x] Pipeline de integração contínua
+- [x] Front end instalável (PWA) com CRUD completo e tela de sorteio
+- [x] Executável de lançamento para Windows
+- [x] MongoDB em volume nomeado, modo descartável e scripts de reset
+- [ ] Autenticação nas rotas — **fora de escopo por decisão**: é peça de portfólio, não um produto distribuído, e a API só é alcançável localmente
 
 ## 👥 Autores
 
