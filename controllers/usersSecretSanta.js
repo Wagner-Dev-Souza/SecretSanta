@@ -81,7 +81,9 @@ const sortUsers = async (req, res, next) => {
       throw SECRET_SANTA_NOT_FOUND;
     }
 
-    const { result, mail } = await serviceResult.sorteio(secretSanta);
+    // ?enviarEmail=false sorteia sem disparar e-mail (o organizador ve os pares na tela)
+    const enviarEmail = String(req.query.enviarEmail ?? "true").toLowerCase() !== "false";
+    const { result, mail } = await serviceResult.sorteio(secretSanta, { enviarEmail });
 
     return res.json({
       message: "Successfully Raffled Users",

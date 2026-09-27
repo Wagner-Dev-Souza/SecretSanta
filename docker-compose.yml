@@ -9,6 +9,9 @@ services:
       # dentro da rede do Compose o banco e o servico "mongodb", nao localhost;
       # o .env continua valendo para quando a API roda no host
       DB_HOST: mongodb
+    volumes:
+      # configuracao de e-mail definida no app: fora do repositorio e persistente
+      - api-config:/usr/src/app/config
     ports:
       - 3000:3000
     depends_on:
@@ -36,3 +39,4 @@ services:
 
 volumes:
   mongo-data:
+  api-config:

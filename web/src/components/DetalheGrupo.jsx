@@ -1,25 +1,27 @@
 import { useState } from "react";
-import Modal from "./Modal.jsx";
 import ResultadoSorteio from "./ResultadoSorteio.jsx";
 
 export default function DetalheGrupo({
   grupo,
   resultado,
   mail,
+  configuracao,
   onVoltar,
   onRenomear,
   onAdicionar,
   onEditar,
   onRemover,
   onSortear,
+  onAbrirConfiguracao,
 }) {
   const [nomeGrupo, setNomeGrupo] = useState(grupo.name);
   const [novo, setNovo] = useState({ name: "", email: "" });
   const [emEdicao, setEmEdicao] = useState(null);
-  const [confirmandoSorteio, setConfirmandoSorteio] = useState(false);
+  const [escolhendoSorteio, setEscolhendoSorteio] = useState(false);
 
   const participantes = grupo.users || [];
   const podeSortear = participantes.length >= 2;
+  const emailConfigurado = Boolean(configuracao && configuracao.configurado);
 
   const renomear = async (evento) => {
     evento.preventDefault();
@@ -42,9 +44,9 @@ export default function DetalheGrupo({
     }
   };
 
-  const sortear = async () => {
-    setConfirmandoSorteio(false);
-    await onSortear();
+  const sortear = async (enviarEmail) => {
+    setEscolhendoSorteio(false);
+    await onSortear(enviarEmail);
   };
 
   return (
@@ -117,31 +119,50 @@ export default function DetalheGrupo({
       </ul>
 
       <div className="area-sorteio">
-        <button type="button" onClick={() => setConfirmandoSorteio(true)} disabled={!podeSortear}>
+        <button type="button" onClick={() => setEscolhendoSorteio(true)} disabled={!podeSortear}>
           Sortear
         </button>
-        {!podeSortear && <p className="vazio">São necessários ao menos 2 participantes.</p>}
-        {podeSortear && (
+        {!podeSortear ? (
+          <p className="vazio">São necessários ao menos 2 participantes.</p>
+        ) : (
           <p className="vazio">
-            O sorteio envia 1 e-mail por participante ({participantes.length} no total).
+            Dá para sortear com ou sem envio de e-mail — você escolhe na hora.
           </p>
         )}
       </div>
 
-      {confirmandoSorteio && (
-        <Modal
-          titulo="Confirmar sorteio"
-          texto={
-            "Serão sorteados " +
-            participantes.length +
-            " pares e enviados " +
-            participantes.length +
-            " e-mails reais para os endereços cadastrados. Não tem como desfazer."
-          }
-          confirmar="Sortear e enviar e-mails"
-          onConfirmar={sortear}
-          onCancelar={() => setConfirmandoSorteio(false)}
-        />
+      {escolhendoSorteio && (
+        <div className="fundo-modal" role="dialog" aria-modal="true" aria-label="Confirmar sorteio">
+          <div className="modal">
+            <h2>Confirmar sorteio</h2>
+            <p>
+              Serão sorteados {participantes.length} pares entre {participantes.length} participantes.
+              Escolha como o resultado sai:
+            </p>
+
+            {!emailConfigurado && (
+              <div className="aviso-caixa">
+                O envio de e-mail ainda não está configurado nesta máquina. Sorteando com envio, os
+                e-mails vão falhar e aparecerão no relatório.
+                <button type="button" className="secundario pequeno" onClick={onAbrirConfiguracao}>
+                  Configurar agora
+                </button>
+              </div>
+            )}
+
+            <div className="modal-acoes modal-acoes--coluna">
+              <button type="button" onClick={() => sortear(true)}>
+                Sortear e enviar {participantes.length} e-mail(s)
+              </button>
+              <button type="button" className="secundario" onClick={() => sortear(false)}>
+                Sortear sem enviar e-mail
+              </button>
+              <button type="button" className="secundario" onClick={() => setEscolhendoSorteio(false)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <ResultadoSorteio resultado={resultado} mail={mail} />

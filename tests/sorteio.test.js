@@ -108,6 +108,63 @@ describe("amigos do waguinho", () => {
   });
 });
 
+describe("sorteio sem envio de e-mail", () => {
+  test("sorteia, persiste e marca como nao enviado", async () => {
+    const { id } = await criarGrupo("grupo sem email", [
+      ["Ana", "ana@exemplo.com"],
+      ["Bruno", "bruno@exemplo.com"],
+      ["Carla", "carla@exemplo.com"],
+    ]);
+
+    const resposta = await request(app)
+      .get(`/secret-santa/${id}/sortUsers`)
+      .query({ enviarEmail: "false" })
+      .expect(200);
+
+    conferirIntegridade(resposta.body.data.pairs, 3);
+    expect(resposta.body.mail.skipped).toBe(true);
+    expect(resposta.body.mail.sent).toBe(0);
+    expect(resposta.body.mail.failed).toBe(0);
+    expect(resposta.body.mail.motivo).toBe("sorteio sem envio de e-mail");
+
+    const gravado = await mongoose.connection.db
+      .collection("sortresults")
+      .countDocuments({ secretSantaName: "grupo sem email" });
+    expect(gravado).toBe(1);
+  });
+});
+
+describe("sorteio sem e-mail configurado", () => {
+  test("reporta uma falha por participante em vez de dizer que enviou", async () => {
+    const guardado = {
+      MAILER_TRANSPORT: process.env.MAILER_TRANSPORT,
+      MAILER_EMAIL: process.env.MAILER_EMAIL,
+      MAILER_PASS: process.env.MAILER_PASS,
+    };
+    process.env.MAILER_TRANSPORT = "gmail";
+    delete process.env.MAILER_EMAIL;
+    delete process.env.MAILER_PASS;
+
+    try {
+      const { id } = await criarGrupo("grupo sem configuracao", [
+        ["Ana", "ana@exemplo.com"],
+        ["Bruno", "bruno@exemplo.com"],
+      ]);
+
+      const resposta = await request(app).get(`/secret-santa/${id}/sortUsers`).expect(200);
+
+      expect(resposta.body.mail.configured).toBe(false);
+      expect(resposta.body.mail.sent).toBe(0);
+      expect(resposta.body.mail.failed).toBe(2);
+      expect(resposta.body.mail.errors[0].error).toBe("envio de e-mail nao configurado");
+      // o sorteio em si continua valido e gravado
+      expect(resposta.body.data.pairs).toHaveLength(2);
+    } finally {
+      Object.assign(process.env, guardado);
+    }
+  });
+});
+
 describe("casos de borda do sorteio", () => {
   test("sorteio em grupo inexistente devolve 404 (antes estourava 500)", async () => {
     const resposta = await request(app).get(`/secret-santa/${uuidv4()}/sortUsers`).expect(404);

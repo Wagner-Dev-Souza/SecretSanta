@@ -63,5 +63,22 @@ export const removerParticipante = async (id, userId) => {
   await pedir("/secret-santa/" + id + "/users/" + userId, { method: "DELETE" });
 };
 
-// sorteio: devolve os pares em data e o relatorio de envio em mail
-export const sortear = async (id) => pedir("/secret-santa/" + id + "/sortUsers");
+// sorteio: enviarEmail=false sorteia sem disparar e-mail nenhum
+export const sortear = async (id, { enviarEmail = true } = {}) =>
+  pedir(`/secret-santa/${id}/sortUsers?enviarEmail=${enviarEmail}`);
+
+// configuracao do envio de e-mail (senha nunca volta da API)
+export const obterConfiguracaoEmail = async () => {
+  const corpo = await pedir("/configuracao/email");
+  return (corpo && corpo.data) || null;
+};
+
+export const salvarConfiguracaoEmail = async (dados) => {
+  const corpo = await pedir("/configuracao/email", comCorpo("PUT", dados));
+  return (corpo && corpo.data) || null;
+};
+
+export const limparConfiguracaoEmail = async () => {
+  const corpo = await pedir("/configuracao/email", { method: "DELETE" });
+  return (corpo && corpo.data) || null;
+};
