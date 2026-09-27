@@ -1,0 +1,33 @@
+# O contexto do build da API e a raiz do repositorio: tudo que nao e necessario
+# em tempo de execucao fica de fora da imagem.
+#
+# Sem este arquivo o `COPY . .` copia o node_modules do host POR CIMA do que foi
+# instalado dentro da imagem — levando junto as dependencias de desenvolvimento
+# (jest, nodemon, mongodb-memory-server) e binarios compilados para Windows.
+
+node_modules
+npm-debug.log
+.env
+.sample.env
+
+# fontes que nao fazem parte da API
+tests
+web
+launcher
+docs
+.github
+
+# arquivos de configuracao do proprio build/repositorio
+.git
+.gitignore
+.gitattributes
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose.ephemeral.yml
+data
+
+# documentacao
+README.md
+CHANGELOG.md
+LICENSE
