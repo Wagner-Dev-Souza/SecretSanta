@@ -121,6 +121,35 @@ O front sempre chama `/api/...`. O destino é o único ponto de configuração:
 | API remota | `VITE_API_BASE_URL=https://sua-api` no build |
 | Backend embutido num `.exe` | mesmo `VITE_API_BASE_URL` apontando para o servidor local do app |
 
+## 🚀 Executável de lançamento (Windows)
+
+Em `launcher/` há um app em **Go** que faz o encanamento: confere o Docker (e sobe o
+Docker Desktop se estiver parado), baixa/atualiza o projeto, sobe os containers e abre a
+janela do app em modo aplicativo. Tudo continua rodando em container — o executável não é o app.
+
+```bash
+cd launcher
+go build -o SecretSanta.exe .     # ~8 MB, sem dependências externas
+```
+
+| Opção | Para que serve |
+|---|---|
+| *(nenhuma)* | sobe tudo e abre a janela |
+| `--sem-janela` | sobe sem abrir o navegador |
+| `--abrir` | apenas abre a janela |
+| `--parar` | derruba a stack (os dados ficam no volume) |
+| `--recriar` | refaz o build das imagens |
+| `--dir <pasta>` | usa outra pasta de projeto |
+| `--porta <n>` | porta do front (padrão 8090) |
+
+- **Primeira execução**: baixa o projeto para `%LOCALAPPDATA%\SecretSantapp` e builda as imagens.
+- **Credenciais**: um `.env` em `%APPDATA%\SecretSanta\.env` é copiado para lá automaticamente,
+  então o segredo fica fora do código. Sem esse arquivo, ele usa o `.sample.env` e avisa que falta configurar.
+- **Mesmo banco do desenvolvimento**: o launcher usa `-p secretsanta`, o mesmo projeto Compose
+  do `docker compose up`, então compartilha o volume — os grupos cadastrados não somem.
+- **Requisitos**: Docker Desktop (o launcher abre a página de download se não achar) e Edge ou
+  Chrome para a janela em modo aplicativo.
+
 ## 🗄️ Banco de dados: com volume e sem volume
 
 | Modo | Como subir | O que acontece com os dados |

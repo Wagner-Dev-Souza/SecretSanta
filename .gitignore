@@ -3,3 +3,5 @@
 .env
 /web/node_modules
 /web/dist
+/launcher/SecretSanta.exe
+/launcher/*.log
