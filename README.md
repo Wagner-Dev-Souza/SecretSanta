@@ -159,6 +159,12 @@ O front é um PWA completo: `manifest.webmanifest` com ícones 192/512 (e um `ma
 `service worker` com handler de fetch. No Edge ou Chrome aparece a opção de instalar — janela
 própria, ícone no menu Iniciar, sem barra de navegador.
 
+Os ícones são gerados por script (encoder PNG próprio, só biblioteca padrão do Python):
+
+```bash
+python web/scripts/gerar-icones.py     # regrava web/public/icon-*.png
+```
+
 Regra do service worker: **nada da API vem do cache**. `/api/...` sempre vai à rede; o HTML é
 network-first (HTML velho apontando para assets novos quebraria o app após um deploy) e só os
 assets com hash no nome são servidos do cache.
