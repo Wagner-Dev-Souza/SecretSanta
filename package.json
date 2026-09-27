@@ -35,6 +35,10 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testTimeout": 60000
+    "testTimeout": 60000,
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/web/"
+    ]
   }
 }
