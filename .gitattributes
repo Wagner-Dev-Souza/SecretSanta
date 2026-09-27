@@ -1,0 +1,6 @@
+# Binarios: o autocrlf do Windows converteria CRLF dentro destes arquivos e
+# mudaria os bytes a cada checkout (hash de imagem quebra, icone sai corrompido).
+*.png binary
+*.ico binary
+*.jpg binary
+*.woff2 binary

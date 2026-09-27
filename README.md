@@ -1,5 +1,7 @@
 # Amigo Secreto — API
 
+![CI](https://github.com/Wagner-Dev-Souza/SecretSanta/actions/workflows/ci.yml/badge.svg)
+
 > API REST para organizar sorteios de amigo secreto: cadastra o grupo, realiza o sorteio e envia o resultado por e-mail para cada participante.
 
 ## 🎯 O problema
@@ -100,8 +102,9 @@ npm run db:up          # ou: docker compose up -d --build
 npm run web:up         # build + sobe o front em http://localhost:8090
 ```
 
-Abra **http://localhost:8090**. No Edge ou Chrome, *"Instalar este site como aplicativo"*
-dá janela própria, ícone no menu Iniciar e cara de app nativo.
+Abra **http://localhost:8090**.
+
+> Em `localhost` o navegador considera o site um contexto seguro, então o PWA é instalável sem HTTPS.
 
 **Rodando o front em modo dev** (hot reload, com a API no Docker):
 
@@ -149,6 +152,26 @@ go build -o SecretSanta.exe .     # ~8 MB, sem dependências externas
   do `docker compose up`, então compartilha o volume — os grupos cadastrados não somem.
 - **Requisitos**: Docker Desktop (o launcher abre a página de download se não achar) e Edge ou
   Chrome para a janela em modo aplicativo.
+
+## 📱 PWA (instalável)
+
+O front é um PWA completo: `manifest.webmanifest` com ícones 192/512 (e um `maskable`),
+`service worker` com handler de fetch. No Edge ou Chrome aparece a opção de instalar — janela
+própria, ícone no menu Iniciar, sem barra de navegador.
+
+Regra do service worker: **nada da API vem do cache**. `/api/...` sempre vai à rede; o HTML é
+network-first (HTML velho apontando para assets novos quebraria o app após um deploy) e só os
+assets com hash no nome são servidos do cache.
+
+## ✅ Integração contínua
+
+`.github/workflows/ci.yml` roda a cada push e pull request, em três frentes:
+
+| Job | O que verifica |
+|---|---|
+| **API** | `npm ci` + a suíte Jest/Supertest sobre MongoDB em memória |
+| **Front** | `npm ci` + Vitest, e confere que o build de produção passa |
+| **Lançador** | `go vet` e o build do `.exe` (publicado como artefato `SecretSanta-windows`) |
 
 ## 🗄️ Banco de dados: com volume e sem volume
 

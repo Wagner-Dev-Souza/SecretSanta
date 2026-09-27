@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  api:
+    name: API (Jest + Supertest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instala as dependencias
+        run: npm ci
+
+      - name: Roda a suite do backend
+        # os testes sobem um MongoDB em memoria (mongodb-memory-server): sem servico externo
+        run: npm test
+
+  web:
+    name: Front (Vitest + Testing Library)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Instala as dependencias
+        run: npm ci
+
+      - name: Roda a suite do front
+        run: npm test
+
+      - name: Confere que o build de producao passa
+        run: npm run build
+
+  launcher:
+    name: Lancador (Go)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: launcher
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.x'
+
+      - name: Analise estatica
+        run: go vet ./...
+
+      - name: Confere que o executavel do Windows compila
+        run: GOOS=windows GOARCH=amd64 go build -o SecretSanta.exe .
+
+      - name: Publica o executavel como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: SecretSanta-windows
+          path: launcher/SecretSanta.exe
+          if-no-files-found: error
