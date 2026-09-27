@@ -156,10 +156,14 @@ go build -o SecretSanta.exe .     # ~8 MB, sem dependências externas
 | `--abrir` | apenas abre a janela |
 | `--parar` | derruba a stack (os dados ficam no volume) |
 | `--recriar` | refaz o build das imagens |
+| `--atualizar` | baixa a versão mais recente do projeto antes de subir (e recria os containers) |
 | `--dir <pasta>` | usa outra pasta de projeto |
 | `--porta <n>` | porta do front (padrão 8090) |
 
 - **Primeira execução**: baixa o projeto para `%LOCALAPPDATA%\SecretSantapp` e builda as imagens.
+- **Atualizar**: `--atualizar` rebaixa o projeto e recria os containers. Ele só apaga a pasta se
+  ela tiver sido criada pelo próprio lançador (marcador `.secretsanta-lancador`); apontada para uma
+  pasta sua com `--dir`, ele extrai por cima sem remover nada.
 - **Credenciais**: um `.env` em `%APPDATA%\SecretSanta\.env` é copiado para lá automaticamente,
   então o segredo fica fora do código. Sem esse arquivo, ele usa o `.sample.env` e avisa que falta configurar.
 - **Mesmo banco do desenvolvimento**: o launcher usa `-p secretsanta`, o mesmo projeto Compose

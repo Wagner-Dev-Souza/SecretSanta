@@ -7,6 +7,7 @@
 //
 //	SecretSanta.exe                 sobe tudo e abre a janela
 //	SecretSanta.exe --recriar       rebuilda as imagens antes de subir
+//	SecretSanta.exe --atualizar     baixa a versao mais recente do projeto antes de subir
 //	SecretSanta.exe --sem-janela    sobe sem abrir o navegador
 //	SecretSanta.exe --abrir         apenas abre a janela
 //	SecretSanta.exe --parar         derruba a stack (os dados do banco ficam no volume)
@@ -34,6 +35,10 @@ const (
 	urlRepo              = "https://codeload.github.com/Wagner-Dev-Souza/SecretSanta/tar.gz/refs/heads/main"
 	caminhoDockerDesktop = `C:\Program Files\Docker\Docker\Docker Desktop.exe`
 	urlDocker            = "https://www.docker.com/products/docker-desktop/"
+
+	// arquivo que marca uma pasta criada pelo lancador; sem ele, --atualizar
+	// nao apaga nada (para nunca destruir um projeto apontado com --dir)
+	marcaBaixado = ".secretsanta-lancador"
 )
 
 var (
@@ -41,6 +46,7 @@ var (
 	parar     = flag.Bool("parar", false, "derruba a stack e sai")
 	soAbrir   = flag.Bool("abrir", false, "apenas abre a janela (nao sobe nada)")
 	recriar   = flag.Bool("recriar", false, "forca o rebuild das imagens")
+	atualizar = flag.Bool("atualizar", false, "baixa a versao mais recente do projeto antes de subir")
 	porta     = flag.Int("porta", 8090, "porta do front")
 	dirFlag   = flag.String("dir", "", "pasta do projeto (padrao: %LOCALAPPDATA%\\SecretSanta\\app)")
 	projeto   = flag.String("projeto", "secretsanta", "nome do projeto Docker Compose (define o volume do banco)")
@@ -81,6 +87,11 @@ func temProjeto(dir string) bool {
 		}
 	}
 	return true
+}
+
+func pastaBaixada(dir string) bool {
+	_, err := os.Stat(filepath.Join(dir, marcaBaixado))
+	return err == nil
 }
 
 func baixarProjeto(dir string) error {
@@ -157,6 +168,9 @@ func baixarProjeto(dir string) error {
 		}
 	}
 
+	if err := os.WriteFile(filepath.Join(dir, marcaBaixado), []byte("baixado por SecretSanta.exe"), 0o600); err != nil {
+		return err
+	}
 	logf("%d arquivos extraidos em %s", arquivos, dir)
 	return nil
 }
@@ -333,22 +347,34 @@ func main() {
 	logf("Docker OK")
 
 	primeiraVez := false
-	if temProjeto(dir) {
-		logf("projeto encontrado em %s", dir)
-	} else {
+	if !temProjeto(dir) {
 		if err := baixarProjeto(dir); err != nil {
 			morrer("falha ao baixar o projeto: %v", err)
 		}
 		primeiraVez = true
+	} else if *atualizar {
+		if pastaBaixada(dir) {
+			logf("atualizando: apagando a copia anterior em %s", dir)
+			if err := os.RemoveAll(dir); err != nil {
+				morrer("nao consegui limpar %s: %v", dir, err)
+			}
+		} else {
+			logf("aviso: %s nao foi criada por este lancador — extraindo por cima, sem limpar", dir)
+		}
+		if err := baixarProjeto(dir); err != nil {
+			morrer("falha ao baixar o projeto: %v", err)
+		}
+	} else {
+		logf("projeto encontrado em %s", dir)
 	}
 
 	garantirEnv(dir)
 
-	if frontResponde(*porta) {
+	if frontResponde(*porta) && !*atualizar {
 		logf("a stack ja esta no ar")
 	} else {
 		args := []string{"up", "-d"}
-		if *recriar || primeiraVez {
+		if *recriar || *atualizar || primeiraVez {
 			args = append(args, "--build")
 		}
 		logf("subindo os containers (na primeira vez baixa imagens e builda: demora alguns minutos)")

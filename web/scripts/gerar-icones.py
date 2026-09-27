@@ -9,7 +9,9 @@ fundo de borda a borda; o icone normal tem cantos arredondados transparentes.
 """
 import struct, zlib, pathlib
 
-SAIDA = pathlib.Path(__file__).resolve().parent.parent / "public"
+RAIZ = pathlib.Path(__file__).resolve().parent.parent.parent
+SAIDA = RAIZ / "web" / "public"
+LADO_ICO = 256
 
 FUNDO = (11, 18, 32, 255)
 AZUL = (79, 156, 249, 255)
@@ -58,7 +60,7 @@ def cor_em(u, v, maskable):
     return FUNDO
 
 
-def gerar(size, maskable, caminho, amostras=4):
+def gerar_png(size, maskable, amostras=4):
     pixels = bytearray(size * size * 4)
     passo = 1.0 / (size * amostras)
     for y in range(size):
@@ -79,8 +81,14 @@ def gerar(size, maskable, caminho, amostras=4):
                 pixels[i + 1] = g // a
                 pixels[i + 2] = b // a
                 pixels[i + 3] = a // (amostras * amostras)
-    salvar_png(caminho, size, size, pixels)
-    print(f"  {caminho.name}: {size}x{size} ({caminho.stat().st_size} bytes)")
+    return png_bytes(size, size, pixels)
+
+
+def gerar(size, maskable, caminho):
+    dados = gerar_png(size, maskable)
+    caminho.write_bytes(dados)
+    print(f"  {caminho.name}: {size}x{size} ({len(dados)} bytes)")
+    return dados
 
 
 def bloco(tipo, dados):
@@ -92,7 +100,7 @@ def bloco(tipo, dados):
     )
 
 
-def salvar_png(caminho, largura, altura, pixels):
+def png_bytes(largura, altura, pixels):
     cru = bytearray()
     for y in range(altura):
         cru.append(0)
@@ -101,10 +109,24 @@ def salvar_png(caminho, largura, altura, pixels):
     dados += bloco(b"IHDR", struct.pack(">IIBBBBB", largura, altura, 8, 6, 0, 0, 0))
     dados += bloco(b"IDAT", zlib.compress(bytes(cru), 9))
     dados += bloco(b"IEND", b"")
-    caminho.write_bytes(dados)
+    return dados
+
+
+def ico_bytes(png):
+    """Envelopa um PNG num .ico (formato aceito pelo Windows desde o Vista)."""
+    lado = 0 if LADO_ICO >= 256 else LADO_ICO
+    cabecalho = struct.pack("<HHH", 0, 1, 1)
+    entrada = struct.pack("<BBBBHHII", lado, lado, 0, 0, 1, 32, len(png), 6 + 16)
+    return cabecalho + entrada + png
 
 
 print("gerando icones")
 gerar(192, False, SAIDA / "icon-192.png")
 gerar(512, False, SAIDA / "icon-512.png")
 gerar(512, True, SAIDA / "icon-maskable-512.png")
+
+# .ico para o atalho do Windows e para o lancador
+destino_ico = RAIZ / "launcher" / "icon.ico"
+png = gerar_png(LADO_ICO, False)
+destino_ico.write_bytes(ico_bytes(png))
+print(f"  {destino_ico.name}: {LADO_ICO}x{LADO_ICO} ({destino_ico.stat().st_size} bytes)")
