@@ -80,6 +80,37 @@ cp .sample.env .env
 npm start                # http://localhost:3000
 ```
 
+## 🖥️ Front end (web app)
+
+SPA em **React + Vite**, servida por um nginx que também faz proxy de `/api` para o
+container da API (sem CORS e sem expor a API direto).
+
+```bash
+npm run db:up          # ou: docker compose up -d --build
+npm run web:up         # build + sobe o front em http://localhost:8090
+```
+
+Abra **http://localhost:8090**. No Edge ou Chrome, *"Instalar este site como aplicativo"*
+dá janela própria, ícone no menu Iniciar e cara de app nativo.
+
+**Rodando o front em modo dev** (hot reload, com a API no Docker):
+
+```bash
+cd web
+npm install
+VITE_DEV_API_TARGET=http://localhost:3000 npm run dev    # http://localhost:5173
+```
+
+### Configuração da API
+
+O front sempre chama `/api/...`. O destino é o único ponto de configuração:
+
+| Cenário | Como apontar |
+|---|---|
+| Tudo em Docker (padrão) | nada a fazer — o nginx proxeia para `api:3000` |
+| API remota | `VITE_API_BASE_URL=https://sua-api` no build |
+| Backend embutido num `.exe` | mesmo `VITE_API_BASE_URL` apontando para o servidor local do app |
+
 ## 🗄️ Banco de dados: com volume e sem volume
 
 | Modo | Como subir | O que acontece com os dados |

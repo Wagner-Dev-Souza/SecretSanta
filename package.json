@@ -11,7 +11,9 @@
     "db:up:ephemeral": "docker compose -f docker-compose.ephemeral.yml up -d mongodb",
     "db:down:ephemeral": "docker compose -f docker-compose.ephemeral.yml down",
     "db:reset": "docker compose exec -T mongodb mongosh secretSanta --quiet --eval \"db.dropDatabase(); print('banco zerado')\"",
-    "db:destroy": "docker compose down -v"
+    "db:destroy": "docker compose down -v",
+    "web:up": "docker compose up -d --build web",
+    "web:down": "docker compose stop web"
   },
   "keywords": [
     "node"

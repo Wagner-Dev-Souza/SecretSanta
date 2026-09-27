@@ -5,10 +5,24 @@ services:
       context: .
     env_file:
       - .env
+    environment:
+      # dentro da rede do Compose o banco e o servico "mongodb", nao localhost;
+      # o .env continua valendo para quando a API roda no host
+      DB_HOST: mongodb
     ports:
       - 3000:3000
     depends_on:
       - mongodb
+
+  web:
+    image: amigo-secreto-web
+    build:
+      context: ./web
+    ports:
+      # 8080 ja e usado por um Adminer de outro projeto desta maquina
+      - 8090:80
+    depends_on:
+      - api
 
   mongodb:
     image: mongo:5.0
