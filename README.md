@@ -4,6 +4,19 @@
 
 > API REST para organizar sorteios de amigo secreto: cadastra o grupo, realiza o sorteio e envia o resultado por e-mail para cada participante.
 
+## 📸 Telas
+
+| Lista de grupos | Grupo e participantes |
+|---|---|
+| ![Lista de grupos](docs/screenshots/01-lista-grupos.png) | ![Grupo e participantes](docs/screenshots/02-grupo-participantes.png) |
+
+| Confirmação antes de sortear | Resultado do sorteio |
+|---|---|
+| ![Confirmação do sorteio](docs/screenshots/03-confirmacao-sorteio.png) | ![Resultado do sorteio](docs/screenshots/04-resultado-sorteio.png) |
+
+As imagens são geradas com dados fictícios, em banco descartável e com o envio de e-mail desligado
+(`MAILER_TRANSPORT=json`) — produzir o material não dispara e-mail para ninguém.
+
 ## 🎯 O problema
 
 Organizar amigo secreto em grupo pequeno sempre esbarra nas mesmas tarefas manuais: juntar os nomes, sortear sem que alguém tire a si mesmo, avisar cada pessoa do seu par e manter em sigilo quem tirou quem. Feito à mão, é fácil errar ou vazar o resultado.
@@ -290,4 +303,4 @@ Projeto desenvolvido em grupo por:
 
 ## 📄 Licença
 
-ISC, conforme declarado no `package.json` do projeto.
+ISC — o texto está em [LICENSE](LICENSE). O histórico de mudanças está em [CHANGELOG.md](CHANGELOG.md).
