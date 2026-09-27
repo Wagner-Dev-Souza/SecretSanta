@@ -164,3 +164,200 @@ button.secundario {
   color: var(--suave);
   font-size: 14px;
 }
+
+
+/* ---------- Fase 2: CRUD ---------- */
+
+.grupo-nome {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.grupo-nome strong {
+  color: var(--texto);
+}
+
+.grupo-nome:hover strong {
+  color: var(--destaque);
+}
+
+.novo-grupo,
+.adicionar,
+.renomear,
+.editar {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.novo-grupo input,
+.adicionar input,
+.renomear input,
+.editar input {
+  flex: 1;
+  min-width: 160px;
+  background: var(--painel);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  color: var(--texto);
+  padding: 11px 13px;
+  font-size: 14px;
+}
+
+.renomear {
+  margin-top: 18px;
+}
+
+.renomear input {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.participantes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.participante {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--painel);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 12px 14px;
+  flex-wrap: wrap;
+}
+
+.participante .grupo-info {
+  flex: 1;
+  min-width: 180px;
+}
+
+button.pequeno {
+  padding: 7px 11px;
+  font-size: 13px;
+}
+
+button.perigo-texto {
+  color: var(--erro);
+  border-color: rgba(242, 96, 79, 0.35);
+}
+
+button.perigo {
+  background: var(--erro);
+  color: #240703;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.area-sorteio {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--borda);
+}
+
+.fundo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 15, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  background: var(--painel);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 22px;
+  max-width: 460px;
+  width: 100%;
+}
+
+.modal h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.modal p {
+  color: var(--suave);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modal-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.resultado {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--borda);
+}
+
+.resultado h2 {
+  font-size: 19px;
+  margin: 0 0 14px;
+}
+
+.pares {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.par {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--painel);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.par .quem {
+  color: var(--suave);
+}
+
+.par .seta {
+  color: var(--destaque);
+}
+
+.relatorio-mail {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--ok);
+}
+
+.relatorio-mail--falha {
+  color: var(--erro);
+}
+
+.falhas {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--erro);
+  font-size: 13px;
+}

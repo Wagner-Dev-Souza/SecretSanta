@@ -7,6 +7,10 @@ const alvoApi = process.env.VITE_DEV_API_TARGET || "http://localhost:3000";
 
 export default defineConfig({
   plugins: [react()],
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.test.{js,jsx}"],
+  },
   server: {
     port: 5173,
     proxy: {

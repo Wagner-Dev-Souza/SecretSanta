@@ -85,6 +85,16 @@ npm start                # http://localhost:3000
 SPA em **React + Vite**, servida por um nginx que também faz proxy de `/api` para o
 container da API (sem CORS e sem expor a API direto).
 
+O front faz: listar / criar / renomear / excluir grupo, adicionar / editar / remover participante
+e **sortear** — com confirmação explícita antes de disparar os e-mails (o sorteio manda e-mail de
+verdade) e o relatório de envio (enviados / falhas) na tela.
+
+Testes de UI:
+
+```bash
+cd web && npm test     # Vitest + Testing Library, com fetch mockado: sem API e sem e-mail real
+```
+
 ```bash
 npm run db:up          # ou: docker compose up -d --build
 npm run web:up         # build + sobe o front em http://localhost:8090
